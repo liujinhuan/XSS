@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script  src="/javascripts/encode.js"></script>
+    <script  src="/javascripts/domParse.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    
+    <textarea name="name" rows="10" cols="50" id="txt">
+        <!-- 用户的输入区，无法控制用户输入什么 -->
+    	<p>nihao<img src=null onerror="alert(1)" alt=""></p><button onclick="alert('clickme')">clickme</button>
+    </textarea>
+    <button type="button" name="button" id="btn">提交</button>
+    <button type="button" name="button" id="get">获取</button>
+
+    <script type="text/javascript">
+    	var btn = document.getElementById("btn");
+    	var get = document.getElementById("get");
+    	var txt = document.getElementById("txt");
+
+    	var parse = function(s){
+    		var results = "";
+    		try{
+    			// 解码
+    			HTMLParser(he.unescape(s,{strict:true}),{
+    				start:function(tag,attrs,unary){
+                        // 过滤不合法的标签
+                        if(tag=='script'||tag=='style'||tag=='link'||tag=='iframe'||tag=='frame')return;
+                        results += '<'+tag;
+                        // 这里过滤掉全部的属性，实际中可根据需要有选择性的替换
+                        // for(var i=0,len=attrs.length;i<len;i++){
+                        //     results += " "+attrs[i].name+'="'+attrs[i].escaped+'"';
+                        // }
+                        results += (unary?"/":"")+">";
+                    },
+                    end:function(tag){
+                        results += "</"+tag+">";
+                    },
+                    chars:function(text){
+                        results += text;
+                    },
+                    comment:function(text){
+                        results +="<!--"+text+"-->";
+                    }
+    			});
+    			return results;
+    		}catch (e){
+    			console.log(e);
+    		}finally{
+
+    		}
+    	}
+
+    	btn.addEventListener('click',function(event){
+    		var xhr = new XMLHttpRequest();
+    		var url = "/comment?comment="+txt.value;
+    		xhr.open("GET",url,true);
+    		xhr.onreadystatechange = function(){
+    			if(xhr.readyState===4){
+    				if(xhr.status===200){
+    					var code = JSON.parse(xhr.response).code;
+                        if(code==1){
+                            alert('ok');
+                        }
+    				}else{
+    					console.log(xhr)
+    				}
+    			}
+    		}
+    		xhr.send();
+    	});
+
+    	get.addEventListener('click',function(event){
+    		var xhr = new XMLHttpRequest();
+    		var url = "/getComment";
+    		xhr.open("GET",url,true);
+    		xhr.onreadystatechange = function(){
+    			if(xhr.readyState===4){
+    				if(xhr.status===200){
+    					// 对拿到的数据解码+校验
+    					var comm = parse(JSON.parse(xhr.response).comment);
+    					var txt1 = document.createElement('span');
+    					txt1.innerHTML = comm;
+    					document.body.appendChild(txt1);
+    				}else{
+    					console.log("error")
+    				}
+    			}
+    		}
+    		xhr.send();
+    	});
+
+
+
+    </script>
+
+  </body>
+</html>
