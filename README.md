@@ -24,7 +24,7 @@ npm install
 npm start
 ```
 
-命令号出现如下提示，则表示成功启动。或者浏览器直接访问`localhost:3000`
++ 命令行出现如下提示，则表示成功启动。或者浏览器直接访问`localhost:3000`
 
 ```
 xss@0.0.0 start /Users/liujinhuan647/Documents/Study/xss
