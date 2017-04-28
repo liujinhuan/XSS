@@ -2,7 +2,7 @@
 
 ## 学习笔记
 
-[XSS攻击学习笔记]();
+[XSS攻击学习笔记](https://liujinhuan.github.io/2017/04/27/XSS%E6%94%BB%E5%87%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/);
 
 ## 项目的初始化与运行
 
